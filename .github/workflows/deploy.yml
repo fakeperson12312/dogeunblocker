@@ -38,6 +38,9 @@ jobs:
       - name: get ip part 2
         run: "echo $'GET /mytunnelpassword HTTP/1.1\r\nHost: loca.lt\r\nConnection: close\r\n\r\n' | openssl s_client -connect loca.lt:443 2>/dev/null | sed -n '/^\r$/,$p' | tail -n +2"
 
+      - name: run
+        run: "npm start &"
+        
       - name: Test localtunnel
         run: "lt -p 8000 -s wy-doge"
 
