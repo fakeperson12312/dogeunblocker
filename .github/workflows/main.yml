@@ -29,8 +29,10 @@ jobs:
       - name: Build step
         run: "npm install -g localtunnel"
 
+      - name: Find ip
+        run: "curl https://loca.lt/mytunnelpassword && sleep 5"
+        
       - name: Test localtunnel
         run: "lt -p 8000 -s wy-doge"
-      - name: Find ip
-        run: "curl https://loca.lt/mytunnelpassword"
+
           
