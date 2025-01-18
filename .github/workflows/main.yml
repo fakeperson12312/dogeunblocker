@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
-
+        
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
@@ -30,9 +30,27 @@ jobs:
         run: "npm install -g localtunnel"
 
       - name: Find ip
-        run: "curl https://loca.lt/mytunnelpassword && sleep 5"
+        run: "curl https://loca.lt/mytunnelpassword"
         
-      - name: Test localtunnel
-        run: "lt -p 8000 -s wy-doge"
+#      - name: get ip
+#        run: "python3 -c \"import requests; print(requests.get('https://loca.lt/mytunnelpassword').text)\""
 
-          
+      - name: get ip part 2
+        run: "echo $'GET /mytunnelpassword HTTP/1.1\r\nHost: loca.lt\r\nConnection: close\r\n\r\n' | openssl s_client -connect loca.lt:443 2>/dev/null | sed -n '/^\r$/,$p' | tail -n +2"
+
+      - name: run
+        run: "npm start &"
+
+      - name: test
+        run: "curl http://localhost:8000"
+        
+      - name: cloudflare
+        run: "wget -O cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 && chmod +x cloudflared"
+      
+      - name: run cloudfare
+        run: "./cloudflared --url http://localhost:8000 &"
+
+      - name: run ssh tunnel
+        run: "ssh -p 443 -R0:127.0.0.1:8000 a.pinggy.io"
+#      - name: Test localtunnel
+#        run: "lt -p 8000 -s wy-doge"
