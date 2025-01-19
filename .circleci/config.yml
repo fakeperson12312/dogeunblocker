@@ -41,16 +41,12 @@ jobs:
           command: "nohup npm start > app.log 2>&1 &"
 
       - run:
-        name: Look at app
-        command: for i in {1..10}; do curl localhost:8000 && break || sleep 3; done
-
-      - run:
           name: Install Cloudflared
           command: "wget -O cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 && chmod +x cloudflared"
 
       - run:
           name: Run Cloudflare Tunnel
-          command: "./cloudflared --url http://localhost:8000 --no-tls-verify"
+          command: "npm start & ./cloudflared --url http://localhost:8000 --no-tls-verify"
       - run:
           name: Localtunnel
           command: "npm install -g localtunnel && lt -p 8000 -s doge"
