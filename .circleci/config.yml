@@ -38,7 +38,7 @@ jobs:
 
       - run:
           name: Run application
-          command: "npm start &"
+          command: "npm start"
 
       # - run:
       #     name: Test application
@@ -50,4 +50,4 @@ jobs:
 
       - run:
           name: Run Cloudflare Tunnel
-          command: "./cloudflared --url http://localhost:8000"
+          command: "./cloudflared --url http://localhost:8000 --no-tls-verify"
