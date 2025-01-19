@@ -20,7 +20,7 @@ jobs:
 
       - run:
           name: Install dependencies
-          command: "npm install"
+          command: "node --version && nvm install 22 && nvm use 22 && npm install"
 
       # - run:
       #     name: Install LocalTunnel globally
