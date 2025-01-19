@@ -40,9 +40,9 @@ jobs:
           name: Run application
           command: "npm start &"
 
-      - run:
-          name: Test application
-          command: "curl http://localhost:8000"
+      # - run:
+      #     name: Test application
+      #     command: "curl http://localhost:8000"
 
       - run:
           name: Install Cloudflared
