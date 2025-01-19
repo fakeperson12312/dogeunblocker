@@ -1,51 +1,53 @@
-name: Deploy
-on:
-  push:
-    branches: main
-  pull_request:
-    branches: main
+version: 2.1
+
+workflows:
+  version: 2
+  deploy_workflow:
+    jobs:
+      - deploy
 
 jobs:
   deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-
-    permissions:
-      id-token: write # Needed for auth with Deno Deploy
-      contents: read # Needed to clone the repository
+    docker:
+      - image: circleci/node:latest
 
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-        
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
+      - checkout
 
-      - name: Install step
-        run: "npm i"
+      - run:
+          name: Install Node.js
+          command: "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && . ~/.nvm/nvm.sh && nvm install --lts && nvm use --lts"
 
-      - name: Build step
-        run: "npm install -g localtunnel"
+      - run:
+          name: Install dependencies
+          command: "npm install"
 
-      - name: Find ip
-        run: "curl https://loca.lt/mytunnelpassword"
-        
-#      - name: get ip
-#        run: "python3 -c \"import requests; print(requests.get('https://loca.lt/mytunnelpassword').text)\""
+      - run:
+          name: Install LocalTunnel globally
+          command: "npm install -g localtunnel"
 
-      - name: get ip part 2
-        run: "echo $'GET /mytunnelpassword HTTP/1.1\r\nHost: loca.lt\r\nConnection: close\r\n\r\n' | openssl s_client -connect loca.lt:443 2>/dev/null | sed -n '/^\r$/,$p' | tail -n +2"
+      - run:
+          name: Find IP
+          command: "curl https://loca.lt/mytunnelpassword"
 
-      - name: run
-        run: "npm start &"
+      - run:
+          name: Get IP - alternative
+          command: |
+            echo $'GET /mytunnelpassword HTTP/1.1\r\nHost: loca.lt\r\nConnection: close\r\n\r\n' | \
+            openssl s_client -connect loca.lt:443 2>/dev/null | sed -n '/^\r$/,$p' | tail -n +2
 
-      - name: test
-        run: "curl http://localhost:8000"
-        
-      - name: cloudflare
-        run: "wget -O cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 && chmod +x cloudflared"
-      
-      - name: run cloudfare
-        run: "./cloudflared --url http://localhost:8000"
+      - run:
+          name: Run application
+          command: "npm start &"
+
+      - run:
+          name: Test application
+          command: "curl http://localhost:8000"
+
+      - run:
+          name: Install Cloudflared
+          command: "wget -O cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 && chmod +x cloudflared"
+
+      - run:
+          name: Run Cloudflare Tunnel
+          command: "./cloudflared --url http://localhost:8000"
