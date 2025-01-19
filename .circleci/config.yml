@@ -9,14 +9,14 @@ workflows:
 jobs:
   deploy:
     docker:
-      - image: cimg/node:22.13
+      - image: node:22-alpine
 
     steps:
       - checkout
 
       - run:
-          name: Install Node.js
-          command: "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && . ~/.nvm/nvm.sh && nvm install --lts && nvm use --lts"
+          name: Install stuff
+          command: "apk add wget curl"
 
       - run:
           name: Install dependencies
