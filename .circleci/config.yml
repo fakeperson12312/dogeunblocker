@@ -38,11 +38,11 @@ jobs:
 
       - run:
           name: Run application
-          command: "npm start"
+          command: "nohup npm start &"
 
-      # - run:
-      #     name: Test application
-      #     command: "curl http://localhost:8000"
+      - run:
+          name: Look at app
+          command: "sleep 3 && cat nohup.out"
 
       - run:
           name: Install Cloudflared
