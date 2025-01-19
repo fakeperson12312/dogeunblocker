@@ -42,7 +42,7 @@ jobs:
 
       - run:
           name: Look at app
-          command: "sleep 3 && cat nohup.out"
+          command: "npm start &"
 
       - run:
           name: Install Cloudflared
