@@ -38,7 +38,7 @@ jobs:
 
       - run:
           name: Run application
-          command: "npm start &"
+          command: "npm start"
 
       # - run:
       #     name: Test application
