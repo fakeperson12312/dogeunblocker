@@ -9,6 +9,9 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        
       - name: install node and npm
         uses: actions/setup-node@v4
         with:
